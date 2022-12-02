@@ -9,7 +9,7 @@ app.get('/', (req, res) => {
     res.json({ success: true, data: "gladwin" })
 })
 
-const PORT = process.env.PORT || 80
+const PORT = process.env.PORT || 8080
 
 app.listen(PORT, () => {
     console.log(`Server is connected on port ${PORT}`)
