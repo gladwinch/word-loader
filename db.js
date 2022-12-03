@@ -1,11 +1,12 @@
-const admin = require("firebase-admin")
-const serviceAccount = require("keys.json")
+const dotenv = require('dotenv')
+dotenv.config()
 
+const admin = require("firebase-admin")
 const serviceAccount = {
     type: process.env.FS_TYPE,
     project_id: process.env.FS_PROJECT_ID,
     private_key_id: process.env.FS_PRIVATE_KEY_ID,
-    private_key: process.env.FS_PRIVATE_KEY,
+    private_key: process.env.FS_PRIVATE_KEY.replace(/\\n/g, '\n'),
     client_email: process.env.FS_CLIENT_EMAIL,
     client_id: process.env.FS_CLIENT_ID,
     auth_uri: process.env.FS_AUTH_URI,
@@ -19,5 +20,11 @@ admin.initializeApp({
 })
 
 const db = admin.firestore()
+const listRef = db.collection('list')
 
-db.collection('list')
+async function fetchList() {
+    let docs = await listRef.get()
+    console.log('doces -> ', docs)
+}
+
+fetchList()
