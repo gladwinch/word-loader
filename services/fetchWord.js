@@ -1,8 +1,9 @@
 const axios = require('axios')
-const lists = require('../lists.json')
+const lists = require('../config.json')
 const db = require('../db')
+const config = require('../config.json')
 
-async function fetchWords () {
+async function fetchWord () {
     // get list id
     let lists = await db.fetchList()
     let listKey = selectIndex(lists)
@@ -12,7 +13,22 @@ async function fetchWords () {
         return
     }
     
-    
+    let listId = config.list[listKey]
+    let trelloListUrl = `https://api.trello.com/1/lists/${listId}?cards=all&key=${process.env.TRELLO_API_KEY}&token=${process.env.TRELLO_TOKEN}`
+
+    console.log('listId: ', listId, ' listKey: ', listKey)
+
+    let data = await axios.get(trelloListUrl)
+    let cards = data.data.cards
+
+    if(!cards.length) return
+    let card = cards[getRandomInt(0, cards.length - 1)]
+
+    return {
+        id: card.id,
+        word: card.name,
+        defination: card.desc
+    }
 }
 
 // helper fn
@@ -34,7 +50,4 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-// fetchWords()
-selectIndex(list)
-
-// module.exports = fetchWOrds
+module.exports = fetchWord
