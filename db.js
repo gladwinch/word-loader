@@ -20,11 +20,18 @@ admin.initializeApp({
 })
 
 const db = admin.firestore()
-const listRef = db.collection('list')
+const listRef = db.collection('list').doc('word-list')
 
 async function fetchList() {
-    let docs = await listRef.get()
-    console.log('doces -> ', docs)
+    let response = await listRef.get()
+    return response.data()
 }
 
-fetchList()
+async function updateList(field, value) {
+    listRef.update({ [field]: value })
+}
+
+module.exports = {
+    fetchList,
+    updateList
+}

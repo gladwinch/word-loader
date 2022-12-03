@@ -1,5 +1,6 @@
 const axios = require('axios')
 const lists = require('../lists.json')
+const db = require('../db')
 
 async function fetchWords () {
     // get list id
