@@ -5,8 +5,19 @@ const express = require('express')
 const axios = require('axios')
 const app = express()
 
+// app config
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
 app.get('/', (req, res) => {
-    res.json({ success: true, data: "gladwin" })
+    // get words from trello (progress)
+    // select word from static algorithm
+    // extract word and defination
+    // generate seneteces
+    // push notification
+
+    
+
 })
 
 const PORT = process.env.PORT || 5000
