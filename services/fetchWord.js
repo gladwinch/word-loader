@@ -1,7 +1,7 @@
 const axios = require('axios')
-const lists = require('../config.json')
 const db = require('../db')
 const config = require('../config.json')
+const utils = require('../utils')
 
 async function fetchWord () {
     // get list id
@@ -22,7 +22,7 @@ async function fetchWord () {
     let cards = data.data.cards
 
     if(!cards.length) return
-    let card = cards[getRandomInt(0, cards.length - 1)]
+    let card = cards[utils.getRandomInt(0, cards.length - 1)]
 
     return {
         id: card.id,
@@ -38,16 +38,10 @@ function selectIndex(list) {
         .map((key) => [key, list[key]])
         .filter(list => list[1] > 0)
 
-    let selectedIndex = getRandomInt(0, listArr.length - 1)
+    let selectedIndex = utils.getRandomInt(0, listArr.length - 1)
     if(!listArr.length) null
 
     return listArr[selectedIndex][0]
-}
-
-function getRandomInt(min, max) {
-    min = Math.ceil(min)
-    max = Math.floor(max)
-    return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 module.exports = fetchWord
