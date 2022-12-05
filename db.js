@@ -27,11 +27,51 @@ async function fetchList() {
     return response.data()
 }
 
+async function getSubscription() {
+    const subRef = db.collection('subscription').doc('AJMPLRbXhoGFnGxWc12Q')
+    let response = await subRef.get()
+    let sub = response.data()
+
+    return {
+        endpoint: sub.endpoint,
+        expirationTime: sub.expirationTime,
+        keys: {
+            p256dh: sub.keys_p256dh,
+            auth: sub.keys_auth
+        } 
+    }
+}   
+
+async function resetList() {
+    // reset list property
+    await db.collection('list').doc('word-list').update({
+        'context-practice': 2,
+        'known-word': 1,
+        'learn-word': 3,
+        'new-word': 4,
+        'practice-word': 3
+    })
+}
+
 async function updateList(field, value) {
     listRef.update({ [field]: value })
 }
 
+async function findAndSaveSubscription(sub) {
+    // let subscription = {
+    //     endpoint: sub.endpoint,
+    //     expirationTime: sub.expirationTime,
+    //     [`keys_`]
+    //     keys: {
+    //         p256dh: 'BJ0PrFj_Bz-Lh3C9cJ5RiAoJ1fRcRFo99DWKpqouNSAOTS4SwWvsF53LbAqt4uGu5lKwBwUEt1JIMiZklV8rt4U',
+    //         auth: 'F-zHzN3fHqdJUVvTMBCUAA'
+    //     }
+    // }
+}
+
 module.exports = {
     fetchList,
-    updateList
+    updateList,
+    getSubscription,
+    resetList
 }

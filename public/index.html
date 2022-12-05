@@ -13,7 +13,7 @@
                 transform: translateX(-17rem) translateY(2rem);
             }
 
-            form {
+            .form-con {
                 display: flex;
                 flex-direction: column;
                 max-width: 30rem;
@@ -30,14 +30,19 @@
             </div>
 
             <div class="ml-36">
-                <button class="px-4 py-2 rounded-md bg-green-500 text-white hover:bg-green-600">Notify me</button>
+                <button 
+                    onclick="sendNotification()"
+                    class="px-4 py-2 rounded-md bg-green-500 text-white hover:bg-green-600"
+                >
+                    Notify me
+                </button>
                 <p class="mt-8">Get <span class="text-yellow-500">notification</span> every hour and practice new words, we use trello dashboard <br /> to retrive your words and notify you with its defination and sentences.</p>
                 <div class="flex mt-4">
                     <span>Once you add trello api key & token to our platform you can subscribe <br /> by clicking notify button above.</span>
                     <img src="up-arrow.png" class="up-arrow" />
                 </div>
 
-                <form>
+                <div class="form-con">
                     <input 
                         placeholder="Trello api key" 
                         class="border-solid border-2 border-gray-200 focus:border-green-600 rounded-md px-2 py-1" 
@@ -47,10 +52,29 @@
                         class="border-solid border-2 border-gray-200 focus:border-green-600 rounded-md px-2 py-1" 
                     />
 
-                    <button type="submit" class="px-4 py-2 rounded-md bg-green-500 text-white hover:bg-green-600">Subscribe</button>
-                </form>
+                    <button type="submit" class="px-4 py-2 rounded-md bg-green-500 text-white hover:bg-green-600" onclick="registerDevice()">Subscribe</button>
+                </div>
             </div>
         </div>
         <script src="client.js"></script>
+        <script>
+            async function sendNotification() {
+                try {
+                    console.log("trigger notification!!")       
+                
+                    let response = await fetch("/api/notify", {
+                        method: "GET",
+                        headers: {
+                            "content-type": "application/json"
+                        }
+                    })
+
+                    let data = await response.json()
+                    console.log("the datat -> ", data)   
+                } catch (error) {
+                    console.error(error)
+                }
+            }
+        </script>
     </body>
 </html>

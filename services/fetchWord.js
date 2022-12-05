@@ -4,12 +4,14 @@ const config = require('../config.json')
 const utils = require('../utils')
 
 async function fetchWord () {
-    // get list id
+    // fetch document from firestore list collection
     let lists = await db.fetchList()
-    let listKey = selectIndex(lists)
 
+    // get list id with zero value
+    let listKey = selectIndex(lists)
+    console.log('list key -<' , listKey)
     if(!listKey) {
-        // :TODO resest list db
+        await db.resetList()
         return
     }
     
@@ -20,6 +22,9 @@ async function fetchWord () {
 
     let data = await axios.get(trelloListUrl)
     let cards = data.data.cards
+
+    // update list
+    db.updateList(listKey, lists[listKey]-1)
 
     if(!cards.length) return
     let card = cards[utils.getRandomInt(0, cards.length - 1)]
@@ -32,14 +37,13 @@ async function fetchWord () {
 }
 
 // helper fn
-
 function selectIndex(list) {
     let listArr = Object.keys(list)
         .map((key) => [key, list[key]])
         .filter(list => list[1] > 0)
 
     let selectedIndex = utils.getRandomInt(0, listArr.length - 1)
-    if(!listArr.length) null
+    if(!listArr.length) return null
 
     return listArr[selectedIndex][0]
 }
