@@ -51,30 +51,6 @@
                 </form>
             </div>
         </div>
+        <script src="client.js"></script>
     </body>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          if (Notification.permission !== "granted") Notification.requestPermission();
-        });
-        function notifyMe() {
-          if (!Notification) {
-            alert(
-              "Desktop notifications not available in your browser"
-            );
-            return;
-          }
-      
-          if (Notification.permission !== "granted") Notification.requestPermission();
-          else {
-              const notification = new Notification("New Message", {
-                icon: "http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png",
-                body: "You have a new Message",
-              });
-              notification.onclick = function () {
-                window.focus();
-                this.close();
-              };
-          }
-        }
-      </script>
 </html>

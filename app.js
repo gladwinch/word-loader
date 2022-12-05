@@ -2,6 +2,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const express = require('express')
+const webpush = require('web-push')
 const utils = require('./utils')
 const fetchWord = require('./services/fetchWord')
 const findSentence = require('./services/findSentence')
@@ -11,6 +12,13 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
+
+// web-push config
+webpush.setVapidDetails(
+    'mailto:test@test.com',
+    process.env.PUBLIC_VAPID_KEY,
+    process.env.PRIVATE_VAPID_KEY
+)
 
 app.get('/api/notify', async (_, res) => {
     try {
@@ -24,7 +32,28 @@ app.get('/api/notify', async (_, res) => {
         // :TODO push notification
         res.json({ success: true, data: card })
     } catch (error) {
-        console.log(error)
+        console.error(':ROUTE /api/notify',error)
+    }
+})
+
+app.post('/api/subscribe', async (_, res) => {
+    try {
+        // get push subscription object
+        const subscription = req.body
+
+        // send 201 - resouces created
+        res.status(201).json({})
+
+        // create payload
+        const payload = JSON.stringify({ title: "push test" })
+
+        // pass object to send notification
+        webpush.sendNotification(subscription, payload)
+            .catch(err => {
+                console.error(err)
+            })
+    } catch (error) {
+        console.error(':ROUTE /api/subscribe',error)
     }
 })
 
